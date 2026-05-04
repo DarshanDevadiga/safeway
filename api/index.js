@@ -30,8 +30,11 @@ module.exports = async (req, res) => {
         const { url } = req;
         const method = req.method;
 
+        console.log('Request:', method, url); // Debug log
+
         // Static file serving
         if (url.startsWith('/css/') || url.startsWith('/js/') || url.startsWith('/images/')) {
+            console.log('Static file request:', url);
             return handleStaticFile(req, res);
         }
 
@@ -126,22 +129,29 @@ async function handleStaticFile(req, res) {
     try {
         const { url } = req;
         let filePath;
+        let fileName;
         
         if (url.startsWith('/css/')) {
-            filePath = path.join(__dirname, '..', 'css', url.replace('/css/', ''));
+            fileName = url.replace('/css/', '');
+            filePath = path.join(__dirname, '..', 'css', fileName);
             res.setHeader('Content-Type', 'text/css');
         } else if (url.startsWith('/js/')) {
-            filePath = path.join(__dirname, '..', 'js', url.replace('/js/', ''));
+            fileName = url.replace('/js/', '');
+            filePath = path.join(__dirname, '..', 'js', fileName);
             res.setHeader('Content-Type', 'application/javascript');
         } else if (url.startsWith('/images/')) {
-            filePath = path.join(__dirname, '..', 'images', url.replace('/images/', ''));
+            fileName = url.replace('/images/', '');
+            filePath = path.join(__dirname, '..', 'images', fileName);
         } else {
             return res.status(404).json({ error: 'File not found' });
         }
 
+        console.log('Serving static file:', filePath); // Debug log
+
         // Check if file exists
         if (!fs.existsSync(filePath)) {
-            return res.status(404).json({ error: 'File not found' });
+            console.log('File not found:', filePath);
+            return res.status(404).json({ error: `File not found: ${fileName}` });
         }
 
         // Read and serve file
