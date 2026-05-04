@@ -1,14 +1,18 @@
 require('dotenv').config();
-const express = require('express');
 const mongoose = require('mongoose');
-const cors = require('cors');
 const User = require('../models/User');
 
-const app = express();
-
-// Middleware
-app.use(cors());
-app.use(express.json());
+// Handler for Vercel serverless function
+module.exports = async (req, res) => {
+    // Set CORS headers
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    
+    // Handle preflight requests
+    if (req.method === 'OPTIONS') {
+        return res.status(200).end();
+    }
 
 // Connect to MongoDB and create collections if they don't exist
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/accident_detection';
