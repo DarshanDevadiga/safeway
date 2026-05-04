@@ -1,18 +1,8 @@
 require('dotenv').config();
 const mongoose = require('mongoose');
 const User = require('../models/User');
-
-// Handler for Vercel serverless function
-module.exports = async (req, res) => {
-    // Set CORS headers
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    
-    // Handle preflight requests
-    if (req.method === 'OPTIONS') {
-        return res.status(200).end();
-    }
+const express = require('express');
+const router = express.Router();
 
 // Connect to MongoDB and create collections if they don't exist
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/accident_detection';
@@ -36,7 +26,7 @@ mongoose.connect(MONGODB_URI)
     .catch(err => console.error('❌ Database connection error:', err));
 
 // Register endpoint
-app.post('/register', async (req, res) => {
+router.post('/register', async (req, res) => {
     try {
         const { name, username, password } = req.body;
         
@@ -67,7 +57,7 @@ app.post('/register', async (req, res) => {
 });
 
 // Login endpoint
-app.post('/login', async (req, res) => {
+router.post('/login', async (req, res) => {
     try {
         const { username, password } = req.body;
         
@@ -100,4 +90,5 @@ app.post('/login', async (req, res) => {
     }
 });
 
-module.exports = app;
+module.exports = router;
+

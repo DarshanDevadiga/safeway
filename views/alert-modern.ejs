@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/app.css">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body class="bg-bg-dark text-text-primary">
+
+    <div class="flex w-full h-screen">
+
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <!-- Mobile menu toggle -->
+            <button id="menuToggle" class="lg:hidden absolute top-4 right-4 text-text-secondary hover:text-text-primary">
+                <i class="fas fa-bars text-xl"></i>
+            </button>
+
+            <div class="brand">
+                <i class="fas fa-car-crash text-3xl text-status-critical" style="filter: drop-shadow(0 0 10px #f85149);"></i>
+                <span class="text-xl font-bold">SAFE WAY</span>
+            </div>
+
+            <nav class="nav-menu">
+                <a href="/index" class="nav-item">
+                    <i class="fas fa-home w-6 text-center"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="/live" class="nav-item">
+                    <i class="fas fa-chart-line w-6 text-center"></i>
+                    <span>Live Sensors</span>
+                </a>
+                <a href="/location" class="nav-item">
+                    <i class="fas fa-map-marked-alt w-6 text-center"></i>
+                    <span>GPS Map</span>
+                </a>
+                <a href="/alert" class="nav-item critical active">
+                    <i class="fas fa-exclamation-triangle w-6 text-center"></i>
+                    <span>Emergency Alerts</span>
+                </a>
+                <a href="/about" class="nav-item nav-item-spaced">
+                    <i class="fas fa-book w-6 text-center"></i>
+                    <span>Project Report</span>
+                </a>
+                <a href="/contact" class="nav-item">
+                    <i class="fas fa-envelope w-6 text-center"></i>
+                    <span>Contacts / Admin</span>
+                </a>
+                <a href="/login" class="nav-item nav-item-bottom" onclick="localStorage.removeItem('vadas_active_user');">
+                    <i class="fas fa-sign-out-alt w-6 text-center"></i>
+                    <span>Logout</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+
+            <!-- Header -->
+            <header class="flex justify-between items-center mb-10">
+                <div>
+                    <h1 class="text-4xl font-bold text-gradient mb-2">Emergency Alerts</h1>
+                    <p class="text-text-secondary page-subtitle">Real-time accident detection and response system</p>
+                </div>
+                <div class="user-widget">
+                    <span class="user-widget-text"><%= typeof user !== 'undefined' && user ? user.username : 'Admin' %></span>
+                    <div class="user-avatar"><%= typeof user !== 'undefined' && user ? user.username.charAt(0).toUpperCase() : 'A' %></div>
+                </div>
+            </header>
+
+            <!-- Alert Statistics -->
+            <div class="grid-cards mb-8">
+                <div class="glass-panel stat-card">
+                    <div class="stat-icon icon-red">
+                        <i class="fas fa-exclamation-triangle text-2xl"></i>
+                    </div>
+                    <div class="stat-value" id="totalAlerts">0</div>
+                    <div class="stat-label">Total Alerts</div>
+                </div>
+
+                <div class="glass-panel stat-card">
+                    <div class="stat-icon icon-red">
+                        <i class="fas fa-clock text-2xl"></i>
+                    </div>
+                    <div class="stat-value" id="todayAlerts">0</div>
+                    <div class="stat-label">Today's Alerts</div>
+                </div>
+
+                <div class="glass-panel stat-card">
+                    <div class="stat-icon icon-green">
+                        <i class="fas fa-check-circle text-2xl"></i>
+                    </div>
+                    <div class="stat-value" id="resolvedAlerts">0</div>
+                    <div class="stat-label">Resolved</div>
+                </div>
+
+                <div class="glass-panel stat-card">
+                    <div class="stat-icon icon-blue">
+                        <i class="fas fa-hourglass-half text-2xl"></i>
+                    </div>
+                    <div class="stat-value" id="pendingAlerts">0</div>
+                    <div class="stat-label">Pending</div>
+                </div>
+            </div>
+
+            <!-- Filters and Controls -->
+            <div class="glass-panel p-6 mb-8">
+                <div class="flex flex-wrap gap-4 items-center justify-between">
+                    <div class="flex flex-wrap gap-3">
+                        <button class="btn btn-primary" onclick="refreshAlerts()">
+                            <i class="fas fa-sync-alt mr-2"></i>Refresh
+                        </button>
+                        <select id="severityFilter" class="form-control w-auto" onchange="filterAlerts()">
+                            <option value="">All Severities</option>
+                            <option value="Critical">Critical</option>
+                            <option value="High">High</option>
+                            <option value="Medium">Medium</option>
+                            <option value="Low">Low</option>
+                        </select>
+                        <select id="statusFilter" class="form-control w-auto" onchange="filterAlerts()">
+                            <option value="">All Status</option>
+                            <option value="Pending">Pending</option>
+                            <option value="In Progress">In Progress</option>
+                            <option value="Resolved">Resolved</option>
+                            <option value="Dismissed">Dismissed</option>
+                        </select>
+                    </div>
+                    <div class="text-sm text-text-secondary">
+                        <i class="fas fa-info-circle mr-2"></i>
+                        Auto-refresh every 5 seconds
+                    </div>
+                </div>
+            </div>
+
+            <!-- Alerts Table -->
+            <div class="glass-panel">
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead>
+                            <tr class="border-b border-surface-border">
+                                <th class="text-left p-4 text-text-secondary font-medium text-sm uppercase tracking-wider">Time</th>
+                                <th class="text-left p-4 text-text-secondary font-medium text-sm uppercase tracking-wider">Vehicle</th>
+                                <th class="text-left p-4 text-text-secondary font-medium text-sm uppercase tracking-wider">Severity</th>
+                                <th class="text-left p-4 text-text-secondary font-medium text-sm uppercase tracking-wider">Location</th>
+                                <th class="text-left p-4 text-text-secondary font-medium text-sm uppercase tracking-wider">Contact</th>
+                                <th class="text-left p-4 text-text-secondary font-medium text-sm uppercase tracking-wider">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="alerts-tbody">
+                            <tr>
+                                <td colspan="6" class="text-center p-8 text-text-secondary">
+                                    <i class="fas fa-spinner fa-spin text-2xl mb-4 block"></i>
+                                    Loading alerts...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination -->
+                <div id="pagination" class="flex justify-between items-center p-4 border-t border-surface-border">
+                    <div class="text-sm text-text-secondary">
+                        Showing <span id="startRecord">0</span> to <span id="endRecord">0</span> of <span id="totalRecords">0</span> alerts
+                    </div>
+                    <div class="flex gap-2">
+                        <button id="prevPage" class="btn" disabled>
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <span class="px-4 py-2 text-text-secondary">
+                            Page <span id="currentPage">1</span> of <span id="totalPages">1</span>
+                        </span>
+                        <button id="nextPage" class="btn" disabled>
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Alert Details Modal -->
+            <div id="alertModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
+                <div class="glass-panel max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-2xl font-bold">Alert Details</h2>
+                        <button onclick="closeAlertModal()" class="text-text-secondary hover:text-text-primary">
+                            <i class="fas fa-times text-xl"></i>
+                        </button>
+                    </div>
+                    <div id="modalContent">
+                        <!-- Content will be loaded dynamically -->
+                    </div>
+                </div>
+            </div>
+
+        </main>
+
+    </div>
+
+    <!-- Modern JavaScript -->
+    <script src="/js/app-modern.js"></script>
+    
+    <script>
+        let currentPage = 1;
+        let currentFilters = {};
+        
+        // Refresh alerts manually
+        function refreshAlerts() {
+            currentPage = 1;
+            loadAlerts();
+        }
+        
+        // Filter alerts
+        function filterAlerts() {
+            const severity = document.getElementById('severityFilter').value;
+            const status = document.getElementById('statusFilter').value;
+            
+            currentFilters = {};
+            if (severity) currentFilters.severity = severity;
+            if (status) currentFilters.status = status;
+            
+            currentPage = 1;
+            loadAlerts();
+        }
+        
+        // Load alerts with pagination and filtering
+        async function loadAlerts() {
+            const tbody = document.getElementById('alerts-tbody');
+            tbody.innerHTML = '<tr><td colspan="6" class="text-center p-8 text-text-secondary"><i class="fas fa-spinner fa-spin text-2xl mb-4 block"></i>Loading alerts...</td></tr>';
+            
+            try {
+                const params = new URLSearchParams({
+                    page: currentPage,
+                    limit: 10,
+                    ...currentFilters
+                });
+                
+                const response = await fetch(`/api/alerts?${params}`);
+                const data = await response.json();
+                
+                if (data.alerts && data.alerts.length > 0) {
+                    tbody.innerHTML = '';
+                    data.alerts.forEach(alert => {
+                        const row = createAlertRow(alert);
+                        tbody.appendChild(row);
+                    });
+                    
+                    updatePagination(data.pagination);
+                    updateStatistics();
+                } else {
+                    tbody.innerHTML = '<tr><td colspan="6" class="text-center p-8 text-text-secondary">No alerts found matching your criteria.</td></tr>';
+                    updatePagination({ page: 1, limit: 10, total: 0, pages: 0 });
+                }
+            } catch (error) {
+                console.error('Error loading alerts:', error);
+                tbody.innerHTML = '<tr><td colspan="6" class="text-center p-8 text-status-critical">Error loading alerts. Please try again.</td></tr>';
+            }
+        }
+        
+        // Create alert row
+        function createAlertRow(alert) {
+            const row = document.createElement('tr');
+            row.className = 'border-b border-surface-border hover:bg-surface/30 transition-colors';
+            
+            const time = new Date(alert.timestamp).toLocaleString();
+            const badgeClass = alert.severity === 'Critical' || alert.severity === 'High' ? 'badge-critical' : 'badge-warning';
+            const coords = utils.formatCoordinates(alert.latitude, alert.longitude);
+            
+            row.innerHTML = `
+                <td class="p-4 text-sm">${time}</td>
+                <td class="p-4 font-medium">${alert.vehicleNumber || 'Unknown'}</td>
+                <td class="p-4">
+                    <span class="badge ${badgeClass}">${alert.severity || 'ACCIDENT'}</span>
+                </td>
+                <td class="p-4 text-sm">
+                    <div class="flex items-center gap-2">
+                        <i class="fas fa-map-marker-alt text-accent-blue"></i>
+                        <span>Lat: ${coords.lat}, Lng: ${coords.lng}</span>
+                    </div>
+                </td>
+                <td class="p-4 text-sm">
+                    <div class="flex items-center gap-2">
+                        <i class="fas fa-phone text-status-good"></i>
+                        <span>${alert.contactNumber || 'None'}</span>
+                    </div>
+                </td>
+                <td class="p-4">
+                    <div class="flex gap-2">
+                        <button onclick="viewOnMap(${alert.latitude}, ${alert.longitude})" class="btn btn-primary px-3 py-1 text-sm">
+                            <i class="fas fa-map"></i> Map
+                        </button>
+                        <button onclick="viewAlertDetails('${alert._id}')" class="btn px-3 py-1 text-sm">
+                            <i class="fas fa-eye"></i> Details
+                        </button>
+                    </div>
+                </td>
+            `;
+            
+            return row;
+        }
+        
+        // Update pagination controls
+        function updatePagination(pagination) {
+            document.getElementById('currentPage').textContent = pagination.page;
+            document.getElementById('totalPages').textContent = pagination.pages;
+            document.getElementById('totalRecords').textContent = pagination.total;
+            
+            const start = pagination.total === 0 ? 0 : (pagination.page - 1) * pagination.limit + 1;
+            const end = Math.min(pagination.page * pagination.limit, pagination.total);
+            document.getElementById('startRecord').textContent = start;
+            document.getElementById('endRecord').textContent = end;
+            
+            document.getElementById('prevPage').disabled = pagination.page <= 1;
+            document.getElementById('nextPage').disabled = pagination.page >= pagination.pages;
+        }
+        
+        // Update statistics
+        async function updateStatistics() {
+            try {
+                const response = await fetch('/api/alerts/stats/summary');
+                const stats = await response.json();
+                
+                document.getElementById('totalAlerts').textContent = stats.summary?.total || 0;
+                document.getElementById('todayAlerts').textContent = stats.today || 0;
+                document.getElementById('resolvedAlerts').textContent = stats.summary?.resolved || 0;
+                document.getElementById('pendingAlerts').textContent = stats.summary?.pending || 0;
+            } catch (error) {
+                console.error('Error loading statistics:', error);
+            }
+        }
+        
+        // View on map
+        function viewOnMap(lat, lng) {
+            window.location.href = `/location?lat=${lat}&lng=${lng}`;
+        }
+        
+        // View alert details
+        async function viewAlertDetails(alertId) {
+            try {
+                const response = await fetch(`/api/alerts/${alertId}`);
+                const alert = await response.json();
+                
+                const modal = document.getElementById('alertModal');
+                const content = document.getElementById('modalContent');
+                
+                content.innerHTML = `
+                    <div class="space-y-4">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="text-sm text-text-secondary">Time</label>
+                                <p class="font-medium">${new Date(alert.timestamp).toLocaleString()}</p>
+                            </div>
+                            <div>
+                                <label class="text-sm text-text-secondary">Severity</label>
+                                <p><span class="badge ${alert.severity === 'Critical' || alert.severity === 'High' ? 'badge-critical' : 'badge-warning'}">${alert.severity}</span></p>
+                            </div>
+                            <div>
+                                <label class="text-sm text-text-secondary">Vehicle Number</label>
+                                <p class="font-medium">${alert.vehicleNumber || 'Unknown'}</p>
+                            </div>
+                            <div>
+                                <label class="text-sm text-text-secondary">Driver Name</label>
+                                <p class="font-medium">${alert.driverName || 'Unknown'}</p>
+                            </div>
+                            <div>
+                                <label class="text-sm text-text-secondary">Contact Number</label>
+                                <p class="font-medium">${alert.contactNumber || 'None'}</p>
+                            </div>
+                            <div>
+                                <label class="text-sm text-text-secondary">Device ID</label>
+                                <p class="font-medium">${alert.deviceId || 'Unknown'}</p>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="text-sm text-text-secondary">Location</label>
+                            <p class="font-medium">
+                                <i class="fas fa-map-marker-alt text-accent-blue mr-2"></i>
+                                Lat: ${alert.latitude.toFixed(6)}, Lng: ${alert.longitude.toFixed(6)}
+                            </p>
+                        </div>
+                        
+                        <div>
+                            <label class="text-sm text-text-secondary">Status</label>
+                            <p><span class="badge ${alert.status === 'Resolved' ? 'badge-good' : alert.status === 'In Progress' ? 'badge-warning' : 'badge-critical'}">${alert.status}</span></p>
+                        </div>
+                        
+                        ${alert.notes ? `
+                        <div>
+                            <label class="text-sm text-text-secondary">Notes</label>
+                            <p class="font-medium">${alert.notes}</p>
+                        </div>
+                        ` : ''}
+                        
+                        <div class="flex gap-3 pt-4">
+                            <button onclick="viewOnMap(${alert.latitude}, ${alert.longitude})" class="btn btn-primary">
+                                <i class="fas fa-map mr-2"></i>View on Map
+                            </button>
+                            <button onclick="closeAlertModal()" class="btn">Close</button>
+                        </div>
+                    </div>
+                `;
+                
+                modal.classList.remove('hidden');
+            } catch (error) {
+                console.error('Error loading alert details:', error);
+                utils.showAlert('Error loading alert details', 'error');
+            }
+        }
+        
+        // Close alert modal
+        function closeAlertModal() {
+            document.getElementById('alertModal').classList.add('hidden');
+        }
+        
+        // Pagination controls
+        document.getElementById('prevPage').addEventListener('click', () => {
+            if (currentPage > 1) {
+                currentPage--;
+                loadAlerts();
+            }
+        });
+        
+        document.getElementById('nextPage').addEventListener('click', () => {
+            currentPage++;
+            loadAlerts();
+        });
+        
+        // Close modal on escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeAlertModal();
+            }
+        });
+        
+        // Initialize
+        loadAlerts();
+        
+        // Auto-refresh every 5 seconds
+        setInterval(loadAlerts, 5000);
+    </script>
+
+</body>
+</html>

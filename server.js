@@ -52,7 +52,7 @@ app.get('/', (req, res) => {
 
 // Login page
 app.get('/login', (req, res) => {
-    res.render('login', { 
+    res.render('login-modern', { 
         error: req.query.error ? req.query.error : null,
         title: 'Login - Vehicle Accident Detection'
     });
@@ -73,7 +73,7 @@ app.get('/index', (req, res) => {
         role: 'admin'
     };
     
-    res.render('index', { 
+    res.render('index-modern', { 
         user, 
         stats,
         title: 'Dashboard - Vehicle Accident Detection Alert System'
@@ -125,7 +125,7 @@ app.get('/location', (req, res) => {
 
 app.get('/alert', (req, res) => {
     const user = { username: 'Admin', role: 'admin' };
-    res.render('alert', { 
+    res.render('alert-modern', { 
         user,
         title: 'Emergency Alerts - Vehicle Accident Detection Alert System'
     });
