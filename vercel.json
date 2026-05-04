@@ -5,52 +5,8 @@
       "destination": "/login.html"
     },
     {
-      "source": "/((?!api|css|js).*)",
-      "destination": "/$1"
-    },
-    {
-      "source": "/api/auth/(.*)",
-      "destination": "/api/auth.js"
-    },
-    {
-      "source": "/api/alerts/(.*)",
-      "destination": "/api/alerts.js"
-    }
-  ],
-  "functions": {
-    "api/auth.js": {
-      "maxDuration": 10
-    },
-    "api/alerts.js": {
-      "maxDuration": 10
-    }
-  },
-  "headers": [
-    {
-      "source": "/css/(.*)",
-      "headers": [
-        {
-          "key": "Content-Type",
-          "value": "text/css"
-        },
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=31536000, immutable"
-        }
-      ]
-    },
-    {
-      "source": "/js/(.*)",
-      "headers": [
-        {
-          "key": "Content-Type",
-          "value": "application/javascript"
-        },
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=31536000, immutable"
-        }
-      ]
+      "source": "/api/(.*)",
+      "destination": "/api/$1"
     }
   ]
 }
