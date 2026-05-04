@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Vehicle Accident Detection Alert System</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <div class="app-container">
+
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="brand">
+                <i class="fa-solid fa-car-burst"></i>
+                <span>SAFE WAY</span>
+            </div>
+
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link"><i class="fa-solid fa-house"></i> Home</a>
+                </li>
+                <li class="nav-item">
+                    <a href="live.html" class="nav-link"><i class="fa-solid fa-chart-line"></i> Live Sensors</a>
+                </li>
+                <li class="nav-item">
+                    <a href="location.html" class="nav-link"><i class="fa-solid fa-map-location-dot"></i> GPS Map</a>
+                </li>
+                <li class="nav-item critical">
+                    <a href="alert.html" class="nav-link"><i class="fa-solid fa-triangle-exclamation"></i> Emergency
+                        Alerts</a>
+                </li>
+                <li class="nav-item" style="margin-top: 2rem;">
+                    <a href="about.html" class="nav-link"><i class="fa-solid fa-book-open"></i> Project Report</a>
+                </li>
+                <li class="nav-item">
+                    <a href="contact.html" class="nav-link"><i class="fa-solid fa-address-book"></i> Contacts /
+                        Admin</a>
+                </li>
+                <li class="nav-item" style="margin-top: auto;">
+                    <a href="login.html" class="nav-link"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+                </li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+
+            <header class="top-header">
+                <div>
+                    <h1 class="page-title">Dashboard Overview</h1>
+                    <p style="color: var(--text-secondary); margin-top: 5px;">Welcome to the Vehicle Accident Detection
+                        Alert System</p>
+                </div>
+                <div class="user-widget">
+                    <span style="font-size: 0.9rem; font-weight: 500;">Admin</span>
+                    <div class="user-avatar">A</div>
+                </div>
+            </header>
+
+            <div class="alert-banner" id="systemBanner">
+                <div class="pulsing-dot"></div>
+                <div>
+                    <strong style="display:block; margin-bottom: 2px;">System Live</strong>
+                    <span id="system-statusText" style="font-size: 0.9rem; color: var(--text-secondary);">Active &
+                        Monitoring</span>
+                </div>
+            </div>
+
+            <!-- Quick Stats -->
+            <div class="grid-cards">
+                <div class="glass-panel stat-card fade-in" style="animation-delay: 0.1s;">
+                    <div class="stat-icon icon-blue"><i class="fa-solid fa-car"></i></div>
+                    <div class="stat-value">1</div>
+                    <div class="stat-label">Active Modules</div>
+                </div>
+
+                <div class="glass-panel stat-card fade-in" style="animation-delay: 0.2s;">
+                    <div class="stat-icon icon-green"><i class="fa-solid fa-satellite-dish"></i></div>
+                    <div class="stat-value" style="color: var(--status-good);">Online</div>
+                    <div class="stat-label">GPS & GSM Network</div>
+                </div>
+
+                <div class="glass-panel stat-card fade-in" style="animation-delay: 0.3s;">
+                    <div class="stat-icon icon-red"><i class="fa-solid fa-kit-medical"></i></div>
+                    <div class="stat-value">3</div>
+                    <div class="stat-label">Emergency Contacts</div>
+                </div>
+
+                <div class="glass-panel stat-card fade-in" style="animation-delay: 0.4s;">
+                    <div class="stat-icon icon-purple"><i class="fa-solid fa-database"></i></div>
+                    <div class="stat-value" style="font-size: 1.5rem; margin-top: 10px;">Connected</div>
+                    <div class="stat-label">Cloud Firebase</div>
+                </div>
+            </div>
+
+            <!-- System Introduction -->
+            <div class="glass-panel fade-in" style="animation-delay: 0.5s; padding: 2.5rem;">
+                <h2 style="margin-bottom: 1.5rem; font-size: 1.5rem;">Project Introduction</h2>
+                <p style="color: var(--text-secondary); line-height: 1.6; margin-bottom: 1.5rem; font-size: 1.05rem;">
+                    The <strong>Vehicle Accident Detection Alert System</strong> uses advanced IoT hardware including an
+                    ESP32 microcontroller, MPU-6500 accelerometer sensor, and a GPS/GSM module. By continuously
+                    monitoring the G-force exerted on the vehicle, the system instantly identifies collision patterns.
+                </p>
+                <p style="color: var(--text-secondary); line-height: 1.6; margin-bottom: 2rem; font-size: 1.05rem;">
+                    Upon detecting a critical impact, it automatically extracts real-time precise latitude and longitude
+                    coordinates and dispatches SMS alerts to pre-configured emergency contacts (Police, Ambulance,
+                    Family). Simultaneously, this web dashboard is updated through the cloud, displaying the live map
+                    location and sensor diagnostics to expedite rescue operations.
+                </p>
+
+                <div style="display: flex; gap: 1rem;">
+                    <a href="live.html" class="btn btn-primary"><i class="fa-solid fa-bolt"></i> View Live Sensors</a>
+                    <a href="about.html" class="btn"><i class="fa-solid fa-microchip"></i> Hardware Setup</a>
+                </div>
+            </div>
+
+        </main>
+
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+
+</html>
