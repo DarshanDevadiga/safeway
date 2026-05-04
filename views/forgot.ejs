@@ -4,8 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Vehicle Accident Detection</title>
-    <link rel="stylesheet" href="css/style.css">
+    <title><%= typeof title !== 'undefined' ? title : 'Forgot Password - Vehicle Accident Detection' %></title>
+    <link rel="stylesheet" href="/css/style.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
         :root {
@@ -58,18 +58,18 @@
             box-shadow: var(--shadow-main);
             padding: 2rem;
         }
-        .login-card {
+        .forgot-card {
             width: 100%;
             max-width: 420px;
             position: relative;
             z-index: 10;
             margin: 2rem auto;
         }
-        .login-header {
+        .forgot-header {
             text-align: center;
             margin-bottom: 2rem;
         }
-        .login-header i {
+        .forgot-header i {
             font-size: 3rem;
             color: var(--status-critical);
             margin-bottom: 1rem;
@@ -133,105 +133,99 @@
     </style>
 </head>
 
-<body class="login-page">
+<body class="forgot-page">
 
-    <div class="glass-panel login-card">
-        <div class="login-header">
+    <div class="glass-panel forgot-card">
+        <div class="forgot-header">
             <svg width="48" height="48" viewBox="0 0 24 24" fill="currentColor" style="color: var(--status-critical); margin-bottom: 1rem; display: block; filter: drop-shadow(0 0 15px rgba(248, 81, 73, 0.5));">
                 <path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z"/>
             </svg>
-            <h2>Secure Login</h2>
+            <h2>Reset Password</h2>
             <p style="color: var(--text-secondary); margin-top: 5px;">Vehicle Accident Detection Alert System</p>
         </div>
 
-        <form id="loginForm" autocomplete="off">
-            <div class="form-group" id="errorMsg"
-                style="color: var(--status-critical); background: rgba(248,81,73,0.1); padding: 10px; border-radius: 5px; display: none; font-size: 0.9rem; margin-bottom: 1rem; text-align: center;">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="vertical-align: middle; margin-right: 5px;">
-                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
-                </svg> Incorrect username or password!
-            </div>
+        <% if (typeof error !== 'undefined' && error) { %>
+        <div class="form-group" id="errorMsg"
+            style="color: var(--status-critical); background: rgba(248,81,73,0.1); padding: 10px; border-radius: 5px; display: block; font-size: 0.9rem; margin-bottom: 1rem; text-align: center;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="vertical-align: middle; margin-right: 5px;">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+            </svg> <%= error %>
+        </div>
+        <% } %>
 
-            <div class="form-group">
-                <label class="form-label">Username</label>
-                <input type="text" id="usernameInput" class="form-control" placeholder="Enter username" required>
-            </div>
+        <% if (typeof success !== 'undefined' && success) { %>
+        <div class="form-group" id="successMsg"
+            style="color: var(--status-good); background: rgba(35, 134, 54, 0.1); padding: 10px; border-radius: 5px; display: block; font-size: 0.9rem; margin-bottom: 1rem; text-align: center;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="vertical-align: middle; margin-right: 5px;">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+            </svg> <%= success %>
+        </div>
+        <% } %>
 
+        <form id="forgotForm" autocomplete="off">
             <div class="form-group">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-                    <label class="form-label" style="margin-bottom: 0;">Password</label>
-                    <a href="forgot.html" style="font-size: 0.85rem; color: var(--accent-blue);">Forgot password?</a>
-                </div>
-                <div style="position: relative;">
-                    <input type="password" id="passwordInput" class="form-control" placeholder="Enter password"
-                        required>
-                    <i class="fa-solid fa-eye toggle-password" data-target="passwordInput"
-                        style="position: absolute; right: 15px; top: 15px; cursor: pointer; color: var(--text-secondary);"></i>
-                </div>
+                <label class="form-label">Email Address</label>
+                <input type="email" id="emailInput" class="form-control" placeholder="Enter your email" required>
             </div>
 
             <div style="margin-top: 2rem;">
                 <button type="submit" class="btn btn-primary" style="width: 100%;">
-                    <i class="fa-solid fa-right-to-bracket"></i> Login to Dashboard
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                    </svg> Send Reset Link
                 </button>
             </div>
 
             <div style="text-align: center; margin-top: 1.5rem; font-size: 0.9rem;">
-                <span style="color: var(--text-secondary);">New User?</span>
-                <a href="register.html" style="font-weight: bold;">Create an Account</a>
+                <span style="color: var(--text-secondary);">Remember your password?</span>
+                <a href="/login" style="font-weight: bold;">Sign In</a>
             </div>
         </form>
     </div>
 
     <script>
-        // Clear active user session if they return to login page (Logout)
-        localStorage.removeItem('vadas_active_user');
-
-        document.getElementById('loginForm').addEventListener('submit', async function (e) {
+        document.getElementById('forgotForm').addEventListener('submit', async function (e) {
             e.preventDefault();
 
-            const user = document.getElementById('usernameInput').value.trim();
-            const pass = document.getElementById('passwordInput').value;
+            const email = document.getElementById('emailInput').value.trim();
             const errorMsg = document.getElementById('errorMsg');
+            const successMsg = document.getElementById('successMsg');
 
             try {
-                const response = await fetch('/api/auth/login', {
+                const response = await fetch('/api/auth/forgot-password', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username: user, password: pass })
+                    body: JSON.stringify({ email })
                 });
 
                 const data = await response.json();
 
                 if (!response.ok) {
-                    errorMsg.style.display = "block";
-                    errorMsg.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> ' + data.message;
+                    if (errorMsg) {
+                        errorMsg.style.display = "block";
+                        errorMsg.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="vertical-align: middle; margin-right: 5px;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg> ' + data.message;
+                    }
+                    if (successMsg) successMsg.style.display = "none";
                     return;
                 }
 
-                // Success! Save active session locally for UI checks
-                localStorage.setItem('vadas_active_user', JSON.stringify(data.user));
-                window.location.href = "index.html";
-            } catch (error) {
-                errorMsg.style.display = "block";
-                errorMsg.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> Server error. Please verify backend is running.';
-            }
-        });
-
-        // Toggle Password Visibility
-        document.querySelectorAll('.toggle-password').forEach(icon => {
-            icon.addEventListener('click', function () {
-                const target = document.getElementById(this.getAttribute('data-target'));
-                if (target.type === 'password') {
-                    target.type = 'text';
-                    this.classList.remove('fa-eye');
-                    this.classList.add('fa-eye-slash');
-                } else {
-                    target.type = 'password';
-                    this.classList.remove('fa-eye-slash');
-                    this.classList.add('fa-eye');
+                // Success!
+                if (successMsg) {
+                    successMsg.style.display = "block";
+                    successMsg.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="vertical-align: middle; margin-right: 5px;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg> ' + data.message;
                 }
-            });
+                if (errorMsg) errorMsg.style.display = "none";
+                
+                // Clear form
+                document.getElementById('emailInput').value = '';
+                
+            } catch (error) {
+                if (errorMsg) {
+                    errorMsg.style.display = "block";
+                    errorMsg.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="vertical-align: middle; margin-right: 5px;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg> Server error. Please try again.';
+                }
+                if (successMsg) successMsg.style.display = "none";
+            }
         });
     </script>
 </body>

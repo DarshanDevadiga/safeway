@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= typeof title !== 'undefined' ? title : 'Emergency Alerts - Vehicle Accident Detection Alert System' %></title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
+        :root {
+            --bg-color: #0d1117;
+            --bg-gradient: radial-gradient(circle at top right, #1a2332 0%, #0d1117 100%);
+            --surface-color: rgba(22, 27, 34, 0.7);
+            --surface-border: rgba(255, 255, 255, 0.1);
+            --text-primary: #ffffff;
+            --text-secondary: #8b949e;
+            --accent-blue: #2f81f7;
+            --accent-cyan: #39d353;
+            --accent-purple: #a371f7;
+            --status-critical: #f85149;
+            --status-warning: #d29922;
+            --status-good: #238636;
+            --font-main: 'Outfit', sans-serif;
+            --glass-bg: rgba(22, 27, 34, 0.4);
+            --glass-blur: blur(16px);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 20px;
+            --shadow-main: 0 8px 32px rgba(0, 0, 0, 0.3);
+            --shadow-glow: 0 0 20px rgba(47, 129, 247, 0.4);
+            --shadow-glow-critical: 0 0 25px rgba(248, 81, 73, 0.6);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: var(--font-main);
+            background: var(--bg-color);
+            background-image: var(--bg-gradient);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            overflow-x: hidden;
+        }
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--surface-border);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-main);
+            padding: 2rem;
+        }
+        .app-container { display: flex; width: 100%; height: 100vh; }
+        .sidebar {
+            width: 280px;
+            background: rgba(13, 17, 23, 0.8);
+            backdrop-filter: var(--glass-blur);
+            border-right: 1px solid var(--surface-border);
+            display: flex;
+            flex-direction: column;
+            padding: 2rem 1.5rem;
+            z-index: 1000;
+        }
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            color: var(--text-primary);
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+        .nav-menu {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            flex-grow: 1;
+        }
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 1.25rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            border-radius: var(--radius-md);
+            text-decoration: none;
+        }
+        .nav-link:hover, .nav-item.active .nav-link {
+            color: var(--text-primary);
+            background: rgba(47, 129, 247, 0.1);
+            box-shadow: inset 3px 0 0 var(--accent-blue);
+            text-decoration: none;
+        }
+        .main-content {
+            flex-grow: 1;
+            padding: 2.5rem;
+            overflow-y: auto;
+        }
+        .page-title {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, #fff, #8b949e);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .user-widget {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: var(--surface-color);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            border: 1px solid var(--surface-border);
+        }
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--accent-blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #fff;
+        }
+        .alert-card {
+            background: linear-gradient(135deg, rgba(248, 81, 73, 0.1), rgba(248, 81, 73, 0.05));
+            border: 1px solid rgba(248, 81, 73, 0.3);
+            border-radius: var(--radius-md);
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .alert-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--status-critical);
+        }
+        .alert-time {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+        .alert-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--status-critical);
+            margin-bottom: 0.5rem;
+        }
+        .alert-location {
+            color: var(--accent-cyan);
+            margin-bottom: 1rem;
+        }
+        .alert-status {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            background: rgba(248, 81, 73, 0.2);
+            color: var(--status-critical);
+            border: 1px solid rgba(248, 81, 73, 0.4);
+        }
+        @media (max-width: 768px) {
+            .sidebar { transform: translateX(-100%); position: absolute; height: 100%; }
+            .main-content { padding: 1.5rem; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="app-container">
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="brand">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor" style="color: var(--status-critical); font-size: 1.8rem; filter: drop-shadow(0 0 10px var(--status-critical));">
+                    <path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z"/>
+                </svg>
+                <span>SAFE WAY</span>
+            </div>
+
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="/index" class="nav-link"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="font-size: 1.2rem;"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg> Home</a>
+                </li>
+                <li class="nav-item">
+                    <a href="/live" class="nav-link"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="font-size: 1.2rem;"><path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/></svg> Live Sensors</a>
+                </li>
+                <li class="nav-item">
+                    <a href="/location" class="nav-link"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="font-size: 1.2rem;"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg> GPS Map</a>
+                </li>
+                <li class="nav-item active critical">
+                    <a href="/alert" class="nav-link"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="font-size: 1.2rem;"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg> Emergency Alerts</a>
+                </li>
+                <li class="nav-item" style="margin-top: 2rem;">
+                    <a href="/about" class="nav-link"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="font-size: 1.2rem;"><path d="M21 5c-1.11-.35-2.33-.5-3.5-.5-1.95 0-4.05.4-5.5 1.5-1.45-1.1-3.55-1.5-5.5-1.5S2.45 4.9 1 6v14.65c0 .25.25.5.5.5.1 0 .15-.05.25-.05C3.1 20.45 5.05 20 6.5 20c1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.3 4.75 1.05.1.05.15.05.25.05.25 0 .5-.25.5-.5V6c-.6-.45-1.25-.75-2-1zm0 13.5c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V8c1.35-.85 3.8-1.5 5.5-1.5 1.2 0 2.4.15 3.5.5v11.5z"/></svg> Project Report</a>
+                </li>
+                <li class="nav-item">
+                    <a href="/contact" class="nav-link"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="font-size: 1.2rem;"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg> Contacts / Admin</a>
+                </li>
+                <li class="nav-item" style="margin-top: auto;">
+                    <a href="/login" class="nav-link"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="font-size: 1.2rem;"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg> Logout</a>
+                </li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+
+            <header class="top-header">
+                <div>
+                    <h1 class="page-title">Emergency Alerts</h1>
+                    <p style="color: var(--text-secondary); margin-top: 5px;">Critical Incident Monitoring & Response</p>
+                </div>
+                <div class="user-widget">
+                    <span style="font-size: 0.9rem; font-weight: 500;"><%= typeof user !== 'undefined' && user ? user.username : 'Admin' %></span>
+                    <div class="user-avatar"><%= typeof user !== 'undefined' && user ? user.username.charAt(0).toUpperCase() : 'A' %></div>
+                </div>
+            </header>
+
+            <div class="glass-panel">
+                <h3 style="margin-bottom: 1.5rem; color: var(--status-critical);">Active Emergency Alerts</h3>
+                
+                <!-- Alert Card 1 -->
+                <div class="alert-card">
+                    <div class="alert-time"><%= new Date().toISOString() %></div>
+                    <div class="alert-title">🚨 COLLISION DETECTED</div>
+                    <div class="alert-location">📍 Location: 12.9716°N, 77.5946°E</div>
+                    <div class="alert-status">EMERGENCY</div>
+                    <p style="margin-top: 1rem; color: var(--text-secondary);">
+                        High-impact collision detected. Emergency services have been notified. 
+                        GPS coordinates: 12.9716°N, 77.5946°E. Estimated speed: 65 km/h.
+                    </p>
+                </div>
+
+                <!-- Alert Card 2 -->
+                <div class="alert-card">
+                    <div class="alert-time"><%= new Date(Date.now() - 300000).toISOString() %></div>
+                    <div class="alert-title">⚠️ SEVERE BRAKING EVENT</div>
+                    <div class="alert-location">📍 Location: 12.9715°N, 77.5945°E</div>
+                    <div class="alert-status">WARNING</div>
+                    <p style="margin-top: 1rem; color: var(--text-secondary);">
+                        Sudden deceleration detected. No collision confirmed. 
+                        Monitoring for potential follow-up events.
+                    </p>
+                </div>
+
+                <!-- Alert Card 3 -->
+                <div class="alert-card">
+                    <div class="alert-time"><%= new Date(Date.now() - 600000).toISOString() %></div>
+                    <div class="alert-title">📡 SYSTEM ALERT</div>
+                    <div class="alert-location">📍 Location: 12.9714°N, 77.5944°E</div>
+                    <div class="alert-status">INFO</div>
+                    <p style="margin-top: 1rem; color: var(--text-secondary);">
+                        GPS signal temporarily lost. Backup location services activated.
+                        Signal restored after 45 seconds.
+                    </p>
+                </div>
+            </div>
+
+            <div class="glass-panel" style="margin-top: 1.5rem;">
+                <h3 style="margin-bottom: 1.5rem; color: var(--accent-blue);">Emergency Response Actions</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                    <div style="background: rgba(0,0,0,0.3); padding: 1rem; border-radius: var(--radius-md); border: 1px solid var(--surface-border);">
+                        <h4 style="color: var(--status-good); margin-bottom: 0.5rem;">✅ SMS Sent</h4>
+                        <p style="color: var(--text-secondary); font-size: 0.9rem;">Emergency contacts notified</p>
+                    </div>
+                    <div style="background: rgba(0,0,0,0.3); padding: 1rem; border-radius: var(--radius-md); border: 1px solid var(--surface-border);">
+                        <h4 style="color: var(--accent-cyan); margin-bottom: 0.5rem;">📍 Location Shared</h4>
+                        <p style="color: var(--text-secondary); font-size: 0.9rem;">GPS coordinates transmitted</p>
+                    </div>
+                    <div style="background: rgba(0,0,0,0.3); padding: 1rem; border-radius: var(--radius-md); border: 1px solid var(--surface-border);">
+                        <h4 style="color: var(--accent-purple); margin-bottom: 0.5rem;">📊 Data Logged</h4>
+                        <p style="color: var(--text-secondary); font-size: 0.9rem;">Sensor data recorded</p>
+                    </div>
+                    <div style="background: rgba(0,0,0,0.3); padding: 1rem; border-radius: var(--radius-md); border: 1px solid var(--surface-border);">
+                        <h4 style="color: var(--status-warning); margin-bottom: 0.5rem;">🚑 Services Alerted</h4>
+                        <p style="color: var(--text-secondary); font-size: 0.9rem;">Emergency services notified</p>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+
+    </div>
+
+    <script src="/js/app.js"></script>
+    <script>
+        // Simulate real-time alerts
+        function addNewAlert() {
+            const alertTypes = [
+                { title: '🚨 COLLISION DETECTED', status: 'EMERGENCY', color: 'var(--status-critical)' },
+                { title: '⚠️ SEVERE BRAKING', status: 'WARNING', color: 'var(--status-warning)' },
+                { title: '📡 SYSTEM ALERT', status: 'INFO', color: 'var(--accent-blue)' }
+            ];
+            
+            const randomAlert = alertTypes[Math.floor(Math.random() * alertTypes.length)];
+            const alertCard = document.createElement('div');
+            alertCard.className = 'alert-card';
+            alertCard.style.opacity = '0';
+            alertCard.innerHTML = `
+                <div class="alert-time">${new Date().toISOString()}</div>
+                <div class="alert-title">${randomAlert.title}</div>
+                <div class="alert-location">📍 Location: ${(12.9716 + (Math.random() - 0.5) * 0.001).toFixed(4)}°N, ${(77.5946 + (Math.random() - 0.5) * 0.001).toFixed(4)}°E</div>
+                <div class="alert-status">${randomAlert.status}</div>
+                <p style="margin-top: 1rem; color: var(--text-secondary);">
+                    Automated alert generated by vehicle detection system.
+                </p>
+            `;
+            
+            const container = document.querySelector('.glass-panel');
+            const firstAlert = container.querySelector('.alert-card');
+            container.insertBefore(alertCard, firstAlert);
+            
+            // Fade in animation
+            setTimeout(() => {
+                alertCard.style.transition = 'opacity 0.5s';
+                alertCard.style.opacity = '1';
+            }, 100);
+            
+            // Remove old alerts if too many
+            const alerts = container.querySelectorAll('.alert-card');
+            if (alerts.length > 5) {
+                alerts[alerts.length - 1].remove();
+            }
+        }
+        
+        // Add new alert every 30 seconds for demo
+        setInterval(addNewAlert, 30000);
+    </script>
+</body>
+
+</html>

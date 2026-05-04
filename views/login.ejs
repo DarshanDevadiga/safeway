@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Vehicle Accident Detection</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
+        :root {
+            --bg-color: #0d1117;
+            --bg-gradient: radial-gradient(circle at top right, #1a2332 0%, #0d1117 100%);
+            --surface-color: rgba(22, 27, 34, 0.7);
+            --surface-border: rgba(255, 255, 255, 0.1);
+            --text-primary: #ffffff;
+            --text-secondary: #8b949e;
+            --accent-blue: #2f81f7;
+            --accent-cyan: #39d353;
+            --accent-purple: #a371f7;
+            --status-critical: #f85149;
+            --status-warning: #d29922;
+            --status-good: #238636;
+            --font-main: 'Outfit', sans-serif;
+            --glass-bg: rgba(22, 27, 34, 0.4);
+            --glass-blur: blur(16px);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 20px;
+            --shadow-main: 0 8px 32px rgba(0, 0, 0, 0.3);
+            --shadow-glow: 0 0 20px rgba(47, 129, 247, 0.4);
+            --shadow-glow-critical: 0 0 25px rgba(248, 81, 73, 0.6);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: var(--font-main);
+            background: url('https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80') center/cover no-repeat;
+            position: relative;
+            min-height: 100vh;
+            width: 100vw;
+        }
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to bottom right, rgba(13, 17, 23, 0.9), rgba(13, 17, 23, 0.7));
+            backdrop-filter: blur(8px);
+        }
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--surface-border);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-main);
+            padding: 2rem;
+        }
+        .login-card {
+            width: 100%;
+            max-width: 420px;
+            position: relative;
+            z-index: 10;
+            margin: 2rem auto;
+        }
+        .login-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .login-header i {
+            font-size: 3rem;
+            color: var(--status-critical);
+            margin-bottom: 1rem;
+            display: block;
+            filter: drop-shadow(0 0 15px rgba(248, 81, 73, 0.5));
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        .form-control {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            background: rgba(13, 17, 23, 0.6);
+            border: 1px solid var(--surface-border);
+            border-radius: var(--radius-md);
+            color: var(--text-primary);
+            font-family: var(--font-main);
+            transition: all 0.3s ease;
+        }
+        .form-control:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 3px rgba(47, 129, 247, 0.2);
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: var(--surface-color);
+            color: var(--text-primary);
+            border: 1px solid var(--surface-border);
+            border-radius: var(--radius-md);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: var(--font-main);
+            text-decoration: none;
+            width: 100%;
+        }
+        .btn-primary {
+            background: var(--accent-blue);
+            color: #fff;
+            border-color: var(--accent-blue);
+            box-shadow: 0 4px 14px rgba(47, 129, 247, 0.4);
+        }
+        .btn-primary:hover {
+            background: #1f6feb;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(47, 129, 247, 0.6);
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body class="login-page">
+
+    <div class="glass-panel login-card">
+        <div class="login-header">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="currentColor" style="color: var(--status-critical); margin-bottom: 1rem; display: block; filter: drop-shadow(0 0 15px rgba(248, 81, 73, 0.5));">
+                <path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z"/>
+            </svg>
+            <h2>Secure Login</h2>
+            <p style="color: var(--text-secondary); margin-top: 5px;">Vehicle Accident Detection Alert System</p>
+        </div>
+
+        <% if (typeof error !== 'undefined' && error) { %>
+        <div class="form-group" id="errorMsg"
+            style="color: var(--status-critical); background: rgba(248,81,73,0.1); padding: 10px; border-radius: 5px; display: block; font-size: 0.9rem; margin-bottom: 1rem; text-align: center;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="vertical-align: middle; margin-right: 5px;">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+            </svg> <%= error %>
+        </div>
+        <% } %>
+
+        <form id="loginForm" autocomplete="off" action="/api/auth/login" method="POST">
+            <div class="form-group">
+                <label class="form-label">Username</label>
+                <input type="text" id="usernameInput" name="username" class="form-control" placeholder="Enter username" required>
+            </div>
+
+            <div class="form-group">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                    <label class="form-label" style="margin-bottom: 0;">Password</label>
+                    <a href="/forgot" style="font-size: 0.85rem; color: var(--accent-blue);">Forgot password?</a>
+                </div>
+                <div style="position: relative;">
+                    <input type="password" id="passwordInput" name="password" class="form-control" placeholder="Enter password" required>
+                    <svg class="toggle-password" data-target="passwordInput" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="position: absolute; right: 15px; top: 15px; cursor: pointer; color: var(--text-secondary);">
+                        <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+                    </svg>
+                </div>
+            </div>
+
+            <div style="margin-top: 2rem;">
+                <button type="submit" class="btn btn-primary" style="width: 100%;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M11 7L9.6 8.4l2.6 2.6H2v2h10.2l-2.6 2.6L11 17l5-5-5-5zm9 12h-3v2h3c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-3v2h3v14z"/>
+                    </svg> Login to Dashboard
+                </button>
+            </div>
+
+            <div style="text-align: center; margin-top: 1.5rem; font-size: 0.9rem;">
+                <span style="color: var(--text-secondary);">New User?</span>
+                <a href="/register" style="font-weight: bold;">Create an Account</a>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Clear active user session if they return to login page (Logout)
+        localStorage.removeItem('vadas_active_user');
+
+        document.getElementById('loginForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const user = document.getElementById('usernameInput').value.trim();
+            const pass = document.getElementById('passwordInput').value;
+            const errorMsg = document.getElementById('errorMsg');
+
+            try {
+                const response = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: user, password: pass })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    if (errorMsg) {
+                        errorMsg.style.display = "block";
+                        errorMsg.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="vertical-align: middle; margin-right: 5px;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg> ' + data.message;
+                    }
+                    return;
+                }
+
+                // Success! Save active session locally for UI checks
+                localStorage.setItem('vadas_active_user', JSON.stringify(data.user));
+                window.location.href = "/index";
+            } catch (error) {
+                if (errorMsg) {
+                    errorMsg.style.display = "block";
+                    errorMsg.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="vertical-align: middle; margin-right: 5px;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg> Server error. Please verify backend is running.';
+                }
+            }
+        });
+
+        // Toggle Password Visibility
+        document.querySelectorAll('.toggle-password').forEach(icon => {
+            icon.addEventListener('click', function () {
+                const target = document.getElementById(this.getAttribute('data-target'));
+                if (target.type === 'password') {
+                    target.type = 'text';
+                    this.innerHTML = '<path d="M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.43-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46C3.08 8.3 1.78 10.02 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78l3.15 3.15.02-.16c0-1.66-1.34-3-3-3l-.17.01z"/>';
+                } else {
+                    target.type = 'password';
+                    this.innerHTML = '<path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>';
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

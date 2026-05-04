@@ -5,10 +5,10 @@ const User = require('../models/User');
 // Register endpoint
 router.post('/register', async (req, res) => {
     try {
-        const { name, username, password } = req.body;
+        const { username, email, password } = req.body;
         
         // Basic validation
-        if (!name || !username || !password) {
+        if (!username || !email || !password) {
             return res.status(400).json({ message: 'Please provide all required fields.' });
         }
 
@@ -20,13 +20,16 @@ router.post('/register', async (req, res) => {
         
         // Create new user (using plain text for now, should use bcrypt in production)
         user = new User({
-            name,
             username,
+            email,
             password
         });
         
         await user.save();
-        res.status(201).json({ message: 'Registration successful!' });
+        res.status(201).json({ 
+            message: 'Registration successful!',
+            user: { username, email }
+        });
     } catch (err) {
         console.error('Registration Error: ', err);
         console.error('Error details:', err.name, err.message);

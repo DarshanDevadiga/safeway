@@ -5,12 +5,36 @@
       "destination": "/login.html"
     },
     {
-      "source": "/api/(.*)",
-      "destination": "/api/index.js"
+      "source": "/register",
+      "destination": "/register.html"
     },
     {
-      "source": "/((?!api|css|js).+)",
-      "destination": "/$1"
+      "source": "/about",
+      "destination": "/about.html"
+    },
+    {
+      "source": "/contact",
+      "destination": "/contact.html"
+    },
+    {
+      "source": "/live",
+      "destination": "/live.html"
+    },
+    {
+      "source": "/location",
+      "destination": "/location.html"
+    },
+    {
+      "source": "/alert",
+      "destination": "/alert.html"
+    },
+    {
+      "source": "/index",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/api/(.*)",
+      "destination": "/api/index.js"
     }
   ],
   "functions": {
