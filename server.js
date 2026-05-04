@@ -40,6 +40,11 @@ const alertsRoutes = require('./routes/alerts');
 app.use('/api/auth', authRoutes);
 app.use('/api/alerts', alertsRoutes);
 
+// Favicon route
+app.get('/favicon.ico', (req, res) => {
+    res.status(204).end(); // No content response
+});
+
 // Root route redirects to login
 app.get('/', (req, res) => {
     res.redirect('/login');
@@ -134,8 +139,8 @@ app.get('/forgot', (req, res) => {
     });
 });
 
-// Database connection
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/accident_detection';
+// Database connection - force local MongoDB for development
+const MONGODB_URI = 'mongodb://localhost:27017/accident_detection';
 
 // Connect to MongoDB and create collections if they don't exist
 mongoose.connect(MONGODB_URI)

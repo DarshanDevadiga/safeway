@@ -153,7 +153,7 @@
         </div>
         <% } %>
 
-        <form id="loginForm" autocomplete="off" action="/api/auth/login" method="POST">
+        <div id="loginContainer">
             <div class="form-group">
                 <label class="form-label">Username</label>
                 <input type="text" id="usernameInput" name="username" class="form-control" placeholder="Enter username" required>
@@ -173,7 +173,7 @@
             </div>
 
             <div style="margin-top: 2rem;">
-                <button type="submit" class="btn btn-primary" style="width: 100%;">
+                <button type="button" id="loginButton" class="btn btn-primary" style="width: 100%;">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M11 7L9.6 8.4l2.6 2.6H2v2h10.2l-2.6 2.6L11 17l5-5-5-5zm9 12h-3v2h3c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-3v2h3v14z"/>
                     </svg> Login to Dashboard
@@ -184,28 +184,41 @@
                 <span style="color: var(--text-secondary);">New User?</span>
                 <a href="/register" style="font-weight: bold;">Create an Account</a>
             </div>
-        </form>
+        </div>
     </div>
 
     <script>
         // Clear active user session if they return to login page (Logout)
         localStorage.removeItem('vadas_active_user');
 
-        document.getElementById('loginForm').addEventListener('submit', async function (e) {
+        // Add click event listener to the login button
+        document.getElementById('loginButton').addEventListener('click', async function (e) {
             e.preventDefault();
+            e.stopPropagation();
+            console.log('Button click event triggered');
+            await handleLogin();
+        });
 
+        async function handleLogin() {
             const user = document.getElementById('usernameInput').value.trim();
             const pass = document.getElementById('passwordInput').value;
             const errorMsg = document.getElementById('errorMsg');
 
+            console.log('Attempting login with username:', user);
+
             try {
+                console.log('Making POST request to /api/auth/login');
                 const response = await fetch('/api/auth/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ username: user, password: pass })
                 });
 
+                console.log('Response status:', response.status);
+                console.log('Response method used:', response.type);
+
                 const data = await response.json();
+                console.log('Response data:', data);
 
                 if (!response.ok) {
                     if (errorMsg) {
@@ -224,7 +237,7 @@
                     errorMsg.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="vertical-align: middle; margin-right: 5px;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg> Server error. Please verify backend is running.';
                 }
             }
-        });
+        }
 
         // Toggle Password Visibility
         document.querySelectorAll('.toggle-password').forEach(icon => {

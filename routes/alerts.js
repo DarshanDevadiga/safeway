@@ -10,7 +10,12 @@ router.get('/', async (req, res) => {
         res.status(200).json(alerts);
     } catch (err) {
         console.error('Fetch Alerts Error:', err);
-        res.status(500).json({ message: 'Server error fetching alerts' });
+        // If collection doesn't exist, return empty array instead of error
+        if (err.message.includes('ns doesn\'t exist') || err.message.includes('Collection does not exist')) {
+            res.status(200).json([]);
+        } else {
+            res.status(500).json({ message: 'Server error fetching alerts' });
+        }
     }
 });
 

@@ -38,13 +38,31 @@ router.post('/register', async (req, res) => {
     }
 });
 
+// GET login endpoint - for browser navigation attempts
+router.get('/login', (req, res) => {
+    res.status(405).json({ 
+        message: 'Method not allowed. Please use POST request for login.',
+        method: 'POST',
+        url: '/api/auth/login'
+    });
+});
+
 // Login endpoint
 router.post('/login', async (req, res) => {
     try {
+        console.log('Login request body:', req.body);
+        
         const { username, password } = req.body;
+        
+        // Validate input
+        if (!username || !password) {
+            console.log('Missing username or password');
+            return res.status(400).json({ message: 'Username and password are required' });
+        }
         
         // Hardcoded admin fallback from the existing JS logic
         if (username === "admin" && password === "12345") {
+            console.log('Admin login successful');
             return res.status(200).json({ 
                 message: 'Login successful', 
                 user: { name: 'System Admin', username: 'admin' } 
@@ -54,14 +72,17 @@ router.post('/login', async (req, res) => {
         // Check if user exists in DB
         const user = await User.findOne({ username });
         if (!user) {
+            console.log('User not found:', username);
             return res.status(400).json({ message: 'Incorrect username or password!' });
         }
         
         // Match passwords (ideally use bcrypt.compare here)
         if (password !== user.password) {
+            console.log('Password mismatch for user:', username);
             return res.status(400).json({ message: 'Incorrect username or password!' });
         }
         
+        console.log('User login successful:', username);
         res.status(200).json({ 
             message: 'Login successful', 
             user: { name: user.name, username: user.username } 
