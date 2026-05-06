@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GPS Map - Vehicle Accident Detection Alert System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Leaflet Configuration -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <div class="app-container">
+
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="brand">
+                <i class="fa-solid fa-car-burst"></i>
+                <span>SAFE WAY</span>
+            </div>
+
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link"><i class="fa-solid fa-house"></i> Home</a>
+                </li>
+                <li class="nav-item">
+                    <a href="live.html" class="nav-link"><i class="fa-solid fa-chart-line"></i> Live Sensors</a>
+                </li>
+                <li class="nav-item active">
+                    <a href="location.html" class="nav-link"><i class="fa-solid fa-map-location-dot"></i> GPS Map</a>
+                </li>
+                <li class="nav-item critical">
+                    <a href="alert.html" class="nav-link"><i class="fa-solid fa-triangle-exclamation"></i> Emergency
+                        Alerts</a>
+                </li>
+                <li class="nav-item" style="margin-top: 2rem;">
+                    <a href="about.html" class="nav-link"><i class="fa-solid fa-book-open"></i> Project Report</a>
+                </li>
+                <li class="nav-item">
+                    <a href="contact.html" class="nav-link"><i class="fa-solid fa-address-book"></i> Contacts /
+                        Admin</a>
+                </li>
+                <li class="nav-item" style="margin-top: auto;">
+                    <a href="login.html" class="nav-link"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+                </li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+
+            <header class="top-header">
+                <div>
+                    <h1 class="page-title">GPS Tracker</h1>
+                    <p style="color: var(--text-secondary); margin-top: 5px;">Live Latitude & Longitude Feed via Neo-6M
+                        GPS Module</p>
+                </div>
+                <div class="user-widget">
+                    <span style="font-size: 0.9rem; font-weight: 500;">Admin</span>
+                    <div class="user-avatar">A</div>
+                </div>
+            </header>
+
+            <div class="glass-panel" style="padding: 1rem;">
+                <!-- Map Container -->
+                <div id="map"></div>
+
+                <div
+                    style="padding: 1.5rem 1rem 0.5rem 1rem; display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <strong style="color: var(--accent-blue);"><i class="fa-solid fa-location-crosshairs"></i>
+                            Current Coordinates</strong><br>
+                        <span style="font-family: monospace; font-size: 1.1rem; color: var(--text-secondary);"
+                            id="coord-display">Lat: 12.9716° N, Lng: 77.5946° E</span>
+                    </div>
+
+                    <a href="alert.html" class="btn btn-danger">
+                        <i class="fa-solid fa-bell"></i> View Emergency Log
+                    </a>
+                </div>
+            </div>
+
+        </main>
+
+    </div>
+
+    <script src="js/app.js"></script>
+    <script>
+        // Just a tiny script to update coordinate text along with Leaflet marker
+        setInterval(() => {
+            if (typeof marker !== 'undefined') {
+                const lat = marker.getLatLng().lat.toFixed(4);
+                const lng = marker.getLatLng().lng.toFixed(4);
+                document.getElementById('coord-display').innerText = `Lat: ${lat}° N, Lng: ${lng}° E`;
+            }
+        }, 1000);
+    </script>
+</body>
+
+</html>

@@ -1,8 +1,14 @@
 require('dotenv').config();
-const mongoose = require('mongoose');
-const User = require('../models/User');
 const express = require('express');
-const router = express.Router();
+const mongoose = require('mongoose');
+const cors = require('cors');
+const User = require('../models/User');
+
+const app = express();
+
+// Middleware
+app.use(cors());
+app.use(express.json());
 
 // Connect to MongoDB and create collections if they don't exist
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/accident_detection';
@@ -26,7 +32,7 @@ mongoose.connect(MONGODB_URI)
     .catch(err => console.error('❌ Database connection error:', err));
 
 // Register endpoint
-router.post('/register', async (req, res) => {
+app.post('/register', async (req, res) => {
     try {
         const { name, username, password } = req.body;
         
@@ -57,7 +63,7 @@ router.post('/register', async (req, res) => {
 });
 
 // Login endpoint
-router.post('/login', async (req, res) => {
+app.post('/login', async (req, res) => {
     try {
         const { username, password } = req.body;
         
@@ -90,5 +96,4 @@ router.post('/login', async (req, res) => {
     }
 });
 
-module.exports = router;
-
+module.exports = app;
